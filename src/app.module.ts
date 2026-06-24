@@ -1,34 +1,26 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsersModule } from './users/users.module';
+import { IncomeModule } from './income/income.module';
+import { PlanModule } from './plan/plan.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { LoggerMiddleware } from './users/logger.middleware';
-import { AuthController } from './auth/auth.controller';
-import { AuthService } from './auth/auth.service';
-import { AuthModule } from './auth/auth.module';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { getTypeOrmConfig } from './config/typeorm.config';
 
 @Module({
+  controllers: [AppController],
+  providers: [AppService],
   imports: [
-    UsersModule,
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: 'admin',
-      database: 'expense-db',
-      autoLoadEntities: true,
-      synchronize: true,
+    ConfigModule.forRoot({
+      isGlobal: true,
     }),
-    AuthModule,
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: getTypeOrmConfig,
+      inject: [ConfigService],
+    }),
+    IncomeModule,
+    PlanModule,
   ],
-  controllers: [AppController, AuthController],
-  providers: [AppService, AuthService],
 })
-export class AppModule {
-  configure(consumer) {
-    consumer.apply(LoggerMiddleware).forRoutes('users');
-  }
-}
+export class AppModule {}
