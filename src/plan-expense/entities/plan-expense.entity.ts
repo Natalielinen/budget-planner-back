@@ -1,10 +1,9 @@
-import { PlanEntity } from 'src/plan/entities/plan.entity';
 import {
   Column,
+  CreateDateColumn,
   Entity,
-  JoinColumn,
-  ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity({ name: 'plan-expense' })
@@ -24,9 +23,12 @@ export class PlanExpenseEntity {
   @Column()
   title: string;
 
-  @ManyToOne(() => PlanEntity, (plan) => plan.planExpenses, {
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn({ name: 'planId' })
-  plan: PlanEntity;
+  @Column({ type: 'date' })
+  date: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updateAt: Date;
 }

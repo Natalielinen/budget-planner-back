@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PlanExpenseEntity } from './entities/plan-expense.entity';
-import { Repository } from 'typeorm';
+import { Between, Repository } from 'typeorm';
+import { PlanExpenseDto } from './dto/plan-expense.dto';
 
 @Injectable()
 export class PlanExpenseService {
@@ -10,11 +11,18 @@ export class PlanExpenseService {
     private planExpenseRepository: Repository<PlanExpenseEntity>,
   ) {}
 
-  async getAll() {
-    return await this.planExpenseRepository.find();
+  async getAll(dateFrom: string, dateTo: string) {
+    const expenses = await this.planExpenseRepository.find({
+      where: {
+        date: Between(dateFrom, dateTo),
+      },
+    });
+    return expenses;
   }
 
-  async create(planExpense: PlanExpenseEntity) {
+  async create(body: PlanExpenseDto) {
+    const planExpense = this.planExpenseRepository.create(body);
+
     return await this.planExpenseRepository.save(planExpense);
   }
 }

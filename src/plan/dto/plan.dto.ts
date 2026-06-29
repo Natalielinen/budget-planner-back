@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class PlanDto {
   @IsString()
@@ -8,10 +8,6 @@ export class PlanDto {
   @IsNotEmpty({ message: 'Поле не может быть пустым' })
   dateTo: string;
 
-  @IsNotEmpty({ message: 'Поле не может быть пустым' })
-  planExpenses: {
-    percent: number;
-    fixedAmount: number;
-    title: string;
-  }[];
+  @IsNumber()
+  balance: number;
 }

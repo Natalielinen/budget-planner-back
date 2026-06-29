@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { PlanService } from './plan.service';
 import { PlanDto } from './dto/plan.dto';
 
@@ -14,5 +14,10 @@ export class PlanController {
   @Post()
   async create(@Body() body: PlanDto) {
     return await this.planService.create(body);
+  }
+
+  @Patch(':id')
+  async patchPlan(@Param('id') id: string, @Body() body: Partial<PlanDto>) {
+    return await this.planService.patchPlan(Number(id), body);
   }
 }

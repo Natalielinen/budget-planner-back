@@ -1,9 +1,7 @@
-import { PlanExpenseEntity } from 'src/plan-expense/entities/plan-expense.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
-  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -17,8 +15,8 @@ export class PlanEntity {
   @Column({ type: 'date' })
   dateTo: string;
 
-  @OneToMany(() => PlanExpenseEntity, (expense) => expense.plan)
-  planExpenses: PlanExpenseEntity[];
+  @Column({ type: 'numeric', precision: 10, scale: 2, default: 0 })
+  balance: number;
 
   @CreateDateColumn()
   createdAt: Date;

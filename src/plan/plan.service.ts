@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PlanEntity } from './entities/plan.entity';
 import { Repository } from 'typeorm';
@@ -10,24 +10,9 @@ export class PlanService {
     @InjectRepository(PlanEntity)
     private planRepository: Repository<PlanEntity>,
   ) {}
-  private plans = [
-    {
-      id: 1,
-      dateFrom: new Date('2026-04-25'),
-      dateTo: new Date('2026-05-24'),
-    },
-    {
-      id: 2,
-      dateFrom: new Date('2026-05-25'),
-      dateTo: new Date('2026-06-24'),
-    },
-  ];
 
   async getAll() {
     return await this.planRepository.find({
-      relations: {
-        planExpenses: true,
-      },
       order: {
         dateFrom: 'ASC',
       },
@@ -40,5 +25,12 @@ export class PlanService {
       dateTo: body.dateTo,
     });
     return await this.planRepository.save(plan);
+  }
+
+  async patchPlan(id: number, body: Partial<PlanDto>) {
+    const plan = await this.planRepository.findOne({ where: { id } });
+    if (!plan) throw new NotFoundException('Income not found');
+    Object.assign(plan, body);
+    return this.planRepository.save(plan);
   }
 }
