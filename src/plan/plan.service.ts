@@ -24,7 +24,14 @@ export class PlanService {
   ];
 
   async getAll() {
-    return await this.planRepository.find();
+    return await this.planRepository.find({
+      relations: {
+        planExpenses: true,
+      },
+      order: {
+        dateFrom: 'ASC',
+      },
+    });
   }
 
   async create(body: PlanDto) {

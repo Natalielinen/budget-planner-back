@@ -6,6 +6,7 @@ import { PlanModule } from './plan/plan.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { getTypeOrmConfig } from './config/typeorm.config';
+import { PlanExpenseModule } from './plan-expense/plan-expense.module';
 
 @Module({
   controllers: [AppController],
@@ -21,6 +22,7 @@ import { getTypeOrmConfig } from './config/typeorm.config';
     }),
     IncomeModule,
     PlanModule,
+    PlanExpenseModule,
   ],
 })
 export class AppModule {}
