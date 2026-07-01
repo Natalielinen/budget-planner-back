@@ -17,7 +17,12 @@ export class PlanExpenseService {
         date: Between(dateFrom, dateTo),
       },
     });
-    return expenses;
+
+    const total = expenses.reduce((acc, item) => acc + Number(item.sum), 0);
+    return {
+      expenses,
+      total,
+    };
   }
 
   async create(body: PlanExpenseDto) {
